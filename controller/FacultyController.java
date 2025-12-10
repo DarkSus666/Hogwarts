@@ -6,9 +6,6 @@ import org.springframework.web.bind.annotation.*;
 import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.service.FacultyService;
 
-import java.util.Collection;
-import java.util.Collections;
-
 @RestController
 @RequestMapping("/faculty")
 public class FacultyController {
@@ -49,10 +46,16 @@ public class FacultyController {
     }
 
     @GetMapping
-    public ResponseEntity<Collection<Faculty>> findFaculties(@RequestParam(required = false) String color) {
+    public ResponseEntity<Faculty> findFaculty(@RequestParam(required = false) String color, @RequestParam(required = false) String name, @RequestParam(required = false) String studentName) {
         if (color != null && !color.isBlank()) {
             return ResponseEntity.ok(facultyService.findByColor(color));
         }
-        return ResponseEntity.ok(Collections.emptyList());
+        if (name != null && !name.isBlank()) {
+            return ResponseEntity.ok(facultyService.findByName(name));
+        }
+        if (studentName != null && !studentName.isBlank()) {
+            return ResponseEntity.ok(facultyService.findByStudentName(studentName));
+        }
+        return ResponseEntity.badRequest().build();
     }
 }
