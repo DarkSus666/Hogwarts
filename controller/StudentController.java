@@ -49,9 +49,12 @@ public class StudentController {
     }
 
     @GetMapping
-    public ResponseEntity<Collection<Student>> findStudents(@RequestParam(required = false) int age) {
-        if (age > 0) {
-            return ResponseEntity.ok(studentService.findByAge(age));
+    public ResponseEntity<Collection<Student>> findStudents(@RequestParam(required = false) Integer min, @RequestParam(required = false) Integer max, @RequestParam(required = false) String facultyName) {
+        if (min != null && max != null && min > 0 && max > 0) {
+            return ResponseEntity.ok(studentService.findByAge(min, max));
+        }
+        if (facultyName != null && !facultyName.isBlank()) {
+            return ResponseEntity.ok(studentService.findByFaculty(facultyName));
         }
         return ResponseEntity.ok(Collections.emptyList());
     }
