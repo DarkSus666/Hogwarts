@@ -96,8 +96,11 @@ public class StudentController {
     }
 
     @GetMapping(value = "/{id}/avatar")
-    public void downloadAvatar(@PathVariable Long id, HttpServletResponse response) throws IOException {
+    public ResponseEntity<Void> downloadAvatar(@PathVariable Long id, HttpServletResponse response) throws IOException {
         Avatar avatar = avatarService.findAvatar(id);
+        if (avatar == null) {
+            return ResponseEntity.notFound().build();
+        }
 
         Path path = Path.of(avatar.getFilePath());
 
@@ -108,5 +111,6 @@ public class StudentController {
             response.setContentLength((int) avatar.getFileSize());
             is.transferTo(os);
         }
+        return ResponseEntity.ok().build();
     }
 }
